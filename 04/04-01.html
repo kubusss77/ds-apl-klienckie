@@ -30,9 +30,12 @@
       text-align: right;
     }
 
-    td:not(:first-child) {
+    td:not(:first-child):not(:last-of-type) {
       border-left: 1px solid grey;
     }
+
+    
+
   </style>
   <script>
     const data = {
@@ -48,40 +51,58 @@
       console.clear();
       console.log('Ready!');
 
-      const table = $('#table');
-      const lps = data.header.lps;
+      let clicked = false;
+      $('#button').on('click', function () {
+        if(!clicked) {
+          console.log('Klik')
+          clicked = true;
 
-      const tr_header = $('<tr>');
-      for (let i = 0; i < lps.length; i++) {
-        const td_header = $('<th>').text(lps[i]);
-        tr_header.append(td_header);
-      }
+          const table = $('#table');
+          const lps = data.header.lps;
 
-      table.append(tr_header);
+          const tr_header = $('<tr>');
+          for (let i = 0; i < lps.length; i++) {
+            const td_header = $('<th>').text(lps[i]);
+            tr_header.append(td_header);
+          }
 
-      const columns = data.products;
-      const columnNames = Object.keys(columns);
-      const rowsAmount = columns[columnNames[0]].length;
+          table.append(tr_header);
 
-      for (let i = 0; i < rowsAmount; i++) {
-        const tr = $('<tr>');
+          const columns = data.products;
+          const columnNames = Object.keys(columns);
+          const rowsAmount = columns[columnNames[0]].length;
 
-        const td_lp = $('<td>').text(i + 1);
-        tr.append(td_lp);
+          for (let i = 0; i < rowsAmount; i++) {
+            const tr = $('<tr>');
 
-        for (let j = 0; j < lps.length - 1; j++) {
-          const cellText = columns[columnNames[j]][i];
-          const td = $('<td>').text(cellText);
-          tr.append(td);
+            const td_lp = $('<td>').text(i + 1);
+            tr.append(td_lp);
+
+            for (let j = 0; j < lps.length - 1; j++) {
+              const cellText = columns[columnNames[j]][i];
+              const td = $('<td>').text(cellText);
+              tr.append(td);
+            }
+            table.append(tr)
+          }
+
+          const toSum = columns.prices;
+          let sum = 0;
+          toSum.forEach(value => sum += parseFloat(value.replace(',', '.')));
+
+          const sumCaption = $('<td>').text('Suma')
+          const sumNumber = $('<td>').text(sum);
+          const sumRow = $('<tr>').append(sumCaption).append(sumNumber);
+          table.append(sumRow);
         }
-        table.append(tr)
-      }
+      })
     })
   </script>
 </head>
 <body>
   <main>
     <h1>04-01 Tabela html - tablice </h1>
+    <button id="button">Generuj tabelę</button>
     <table id="table"></table>
   </main>
 </body>

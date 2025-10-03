@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04-01</title>
+  <script src="../jquery.js"></script>
+  <style>
+    body {
+      background: #111;
+    }
+    
+    main {
+      height: 500px;
+      width: 500px;
+      margin-inline: auto;
+      background: lightblue;
+      
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+    }
+
+    .selector {
+      display: flex;
+      margin: 10px;
+    }
+
+    .selector p {
+      margin: 0;
+      margin-right: 10px;
+    }
+
+    table {
+      display: none;
+    }
+
+    th, td {
+      margin: 5px;
+      padding: 5px;
+    }
+
+    td:first-child {
+      text-align: right;
+    }
+
+    td:not(:first-child):not(:last-of-type) {
+      border-left: 1px solid grey;
+    }
+
+    #info {
+      text-align: center;
+    }
+  </style>
+  <script>
+    const products = [
+      { id: 1, nazwa: 'Laptop Pro', cena: 4500 },
+      { id: 2, nazwa: 'Mysz bezprzewodowa', cena: 150 },
+      { id: 3, nazwa: 'Klawiatura mechaniczna', cena: 350 },
+      { id: 4, nazwa: 'Monitor 4K', cena: 1800 }
+    ];
+    $(document).ready(function() {
+      console.clear();
+      console.log('Ready!');
+
+      const select = $('#select');
+      products.forEach(product => {
+        const option = $('<option>').val(product.id).text(product.nazwa);
+        select.append(option);
+      })
+
+      let empty = true;
+      $('#info').text('Koszyk jest pusty.');
+
+      const table = $('#table');
+      const cart = [];
+
+      $('#button').on('click', function () {
+        if (empty) {
+          empty = false;
+          $('#info').text('');
+
+          const tr_header = $('<tr>');
+          tr_header.append($('<th>').text('lp'));
+          tr_header.append($('<th>').text('produkt'));
+          tr_header.append($('<th>').text('cena'));
+          tr_header.append($('<th>').text('ilość'));
+          tr_header.append($('<th>').text('razem'));
+
+          table.append(tr_header);
+          table.css('display') = 'block';
+        }
+
+        const selectedProductId = select.value;
+
+        const existingItemIndex = cart.findIndex(item => item.id = selectedProductId)
+        if(existingItemIndex) {
+          cart[existingItemIndex].amount++
+        } else {
+          const item = {
+            id: selectedProductId,
+            amount: 1
+          };
+          cart.push(item);
+        }
+
+        renderTable();
+      })
+
+      function renderTable() {
+        
+      }
+    })
+  </script>
+</head>
+<body>
+  <main>
+    <h1>04-01 Tabela html - koszyk </h1>
+    <div class="selector">
+      <p>Wybierz produkt:</p>
+      <select id="select"></select>
+    </div>
+    <button id="button">Dodaj do koszyka</button>
+    <p id="info"></p>
+    <table id="table"></table>
+  </main>
+</body>
+</html>
