@@ -1,84 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>04-01</title>
-  <script src="../jquery.js"></script>
-  <style>
-    body {
-      background: #111;
-    }
-    
-    main {
-      height: 500px;
-      width: 500px;
-      margin-inline: auto;
-      background: lightblue;
-      
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>04-01</title>
+    <script src="../jquery.js"></script>
+    <style>
+      body {
+        background: #111;
+      }
 
-    .selector {
-      display: flex;
-      margin: 10px;
-    }
+      main {
+        height: 500px;
+        width: 500px;
+        margin-inline: auto;
+        background: lightblue;
 
-    .selector p {
-      margin: 0;
-      margin-right: 10px;
-    }
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+      }
 
-    table {
-      display: none;
-    }
+      .selector {
+        display: flex;
+        margin: 10px;
+      }
 
-    th, td {
-      margin: 5px;
-      padding: 5px;
-    }
+      .selector p {
+        margin: 0;
+        margin-right: 10px;
+      }
 
-    td:first-child {
-      text-align: right;
-    }
+      table {
+        display: none;
+      }
 
-    td:not(:first-child):not(:last-of-type) {
-      border-left: 1px solid grey;
-    }
+      th,
+      td {
+        margin: 5px;
+        padding: 5px;
+      }
 
-    #info {
-      text-align: center;
-    }
-  </style>
-  <script>
-    const products = [
-      { id: 1, nazwa: 'Laptop Pro', cena: 4500 },
-      { id: 2, nazwa: 'Mysz bezprzewodowa', cena: 150 },
-      { id: 3, nazwa: 'Klawiatura mechaniczna', cena: 350 },
-      { id: 4, nazwa: 'Monitor 4K', cena: 1800 }
-    ];
-    $(document).ready(function() {
-      console.clear();
-      console.log('Ready!');
+      td:first-child {
+        text-align: right;
+      }
 
-      const select = $('#select');
-      products.forEach(product => {
-        const option = $('<option>').val(product.id).text(product.nazwa);
-        select.append(option);
-      })
+      td:not(:first-child) {
+        border-left: 1px solid grey;
+      }
 
-      let empty = true;
-      $('#info').text('Koszyk jest pusty.');
+      tr:last-child td {
+        border: none;
+      }
 
-      const table = $('#table');
-      const cart = [];
+      #info {
+        text-align: center;
+      }
+    </style>
+    <script>
+      const products = [
+        { id: 1, nazwa: 'Laptop Pro', cena: 4500 },
+        { id: 2, nazwa: 'Mysz bezprzewodowa', cena: 150 },
+        { id: 3, nazwa: 'Klawiatura mechaniczna', cena: 350 },
+        { id: 4, nazwa: 'Monitor 4K', cena: 1800 },
+      ];
+      $(document).ready(function () {
+        console.clear();
+        console.log('Ready!');
 
-      $('#button').on('click', function () {
-        if (empty) {
-          empty = false;
-          $('#info').text('');
+        const select = $('#select');
+        products.forEach((product) => {
+          const option = $('<option>')
+            .val(product.id)
+            .text(product.nazwa + ` (${product.cena} zł)`);
+          select.append(option);
+        });
+
+        let empty = true;
+        $('#info').text('Koszyk jest pusty.');
+
+        const table = $('#table');
+        const cart = [];
+
+        $('#button').on('click', function () {
+          if (empty) {
+            empty = false;
+            $('#info').text('');
+
+            table.css('display', 'block');
+          }
+
+          const selectedProductId = select.val();
+
+          const existingItem = cart.find((item) => item.id == selectedProductId);
+          if (existingItem) {
+            existingItem.amount++;
+          } else {
+            const item = {
+              id: selectedProductId,
+              amount: 1,
+            };
+            cart.push(item);
+          }
+
+          renderTable();
+        });
+
+        function renderTable() {
+          console.log('Table render');
+          const table = $('#table');
+          table.empty();
 
           const tr_header = $('<tr>');
           tr_header.append($('<th>').text('lp'));
@@ -88,41 +119,45 @@
           tr_header.append($('<th>').text('razem'));
 
           table.append(tr_header);
-          table.css('display') = 'block';
+
+          let sum = 0;
+          for (let i = 0; i < cart.length; i++) {
+            const tr = $('<tr>');
+            tr.append($('<td>').text(i + 1));
+
+            const cartItem = cart[i];
+            const product = products.find((product) => product.id == cartItem.id);
+            tr.append($('<td>').text(product.nazwa));
+            tr.append($('<td>').text(product.cena));
+            tr.append($('<td>').text(cartItem.amount));
+
+            const partialSum = product.cena * cartItem.amount;
+            sum += partialSum;
+            tr.append($('<td>').text(partialSum));
+
+            table.append(tr);
+          }
+
+          const trSum = $('<tr>');
+          const tdEmpty = $('<td>').text('');
+          trSum.append($('<td>').text('SUMA').attr('colspan', 4));
+          trSum.append($('<td>').text(sum));
+
+          table.append(trSum);
         }
-
-        const selectedProductId = select.value;
-
-        const existingItemIndex = cart.findIndex(item => item.id = selectedProductId)
-        if(existingItemIndex) {
-          cart[existingItemIndex].amount++
-        } else {
-          const item = {
-            id: selectedProductId,
-            amount: 1
-          };
-          cart.push(item);
-        }
-
-        renderTable();
-      })
-
-      function renderTable() {
-        
-      }
-    })
-  </script>
-</head>
-<body>
-  <main>
-    <h1>04-01 Tabela html - koszyk </h1>
-    <div class="selector">
-      <p>Wybierz produkt:</p>
-      <select id="select"></select>
-    </div>
-    <button id="button">Dodaj do koszyka</button>
-    <p id="info"></p>
-    <table id="table"></table>
-  </main>
-</body>
+      });
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>04-01 Tabela html - koszyk</h1>
+      <div class="selector">
+        <p>Wybierz produkt:</p>
+        <select id="select"></select>
+      </div>
+      <button id="button">Dodaj do koszyka</button>
+      <p id="info"></p>
+      <table id="table"></table>
+    </main>
+  </body>
 </html>
