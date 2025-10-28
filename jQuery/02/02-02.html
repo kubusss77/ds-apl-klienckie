@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>02-02</title>
+    <style>
+      body {
+        margin: 0;
+        text-align: center;
+      }
+
+      h1 {
+        margin-inline: 50px;
+        position: absolute;
+        background: white;
+      }
+
+      main {
+        display: flex;
+      }
+
+      section {
+        line-height: 100vh;
+        height: 100vh;
+        font-size: 50px;
+      }
+
+      #sec-a {
+        background: green;
+      }
+
+      #divider {
+        width: 10px;
+        background: gray;
+      }
+
+      #sec-b {
+        background: blue;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        const secA = $('#sec-a');
+        const secB = $('#sec-b');
+        const full = $(window).width();
+
+        secA.width(full / 2 - 5);
+        secB.width(full / 2 - 5);
+
+        $('#divider').on('mousedown', function () {
+          $(window).on('mousemove', function (e) {
+            secA.width(e.clientX);
+            secB.width(full - e.clientX);
+          });
+        });
+
+        $(window).on('mouseup', function () {
+          $(window).off('mousemove');
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Zdarzenia myszy, pozycja myszy - ruchome panele</h1>
+    <main>
+      <section id="sec-a">A</section>
+      <section id="divider"></section>
+      <section id="sec-b">B</section>
+    </main>
+  </body>
+</html>

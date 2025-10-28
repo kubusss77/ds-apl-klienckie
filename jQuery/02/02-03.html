@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>02-03</title>
+    <style>
+      body {
+        text-align: center;
+      }
+
+      #board {
+        width: 500px;
+        margin-inline: auto;
+        margin-top: 50px;
+        background: lightgrey;
+        padding: 5px;
+      }
+
+      .parent {
+        background: blue;
+        margin: 10px;
+        padding: 5px;
+        display: flex;
+      }
+
+      h2,
+      h3 {
+        margin: 0;
+        width: 50%;
+        text-align: left;
+      }
+
+      .children {
+        margin: 15px;
+        padding: 5px;
+        border-left: 2px solid black;
+      }
+
+      .child {
+        background: orange;
+        height: 20px;
+        padding: 5px;
+        margin: 5px;
+        display: flex;
+      }
+
+      .buttons {
+        text-align: right;
+        width: 50%;
+      }
+
+      .btn {
+        height: 20px;
+        width: 20px;
+        line-height: 20px;
+        border-radius: 10px;
+        margin: 5px;
+      }
+
+      .btn-add {
+        background: greenyellow;
+      }
+
+      .btn-del {
+        background: red;
+      }
+
+      .child .btn-del {
+        margin: 0;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        const sel = $('#sel');
+        for (let i = 0; i < 10; i++) {
+          sel.append($('<option>').text(i + 1));
+        }
+
+        let parentCounter = 0;
+        let childCounter = [];
+        let childDeletedCounter = [];
+
+        $('#btn-gen').on('click', function () {
+          const val = parseInt(sel.val());
+          for (let i = 0; i < val; i++) {
+            parentCounter++;
+            const parentId = parentCounter;
+            const addBtn = $('<button>')
+              .addClass('btn btn-add')
+              .text('+')
+              .on('click', () => addChild(parentId));
+            const delBtn = $('<button>')
+              .addClass('btn btn-del')
+              .text('X')
+              .on('click', function () {
+                $('#parent-' + parentId).remove();
+                $('#children-' + parentId).remove();
+              });
+            const buttons = $('<div>').append(addBtn, delBtn).addClass('buttons');
+            const h2 = $('<h2>').text('Parent ' + parentCounter);
+
+            const parent = $('<div>')
+              .addClass('parent')
+              .append(h2, buttons)
+              .attr('id', 'parent-' + parentId);
+            const children = $('<div>').attr('id', 'children-' + parentCounter);
+            $('#board').append(parent, children);
+
+            childCounter.push(0);
+            childDeletedCounter.push(0);
+          }
+        });
+
+        $('#btn-del').on('click', function () {
+          $('#board').empty();
+          parentCounter = 0;
+        });
+
+        function addChild(id) {
+          const parentId = id;
+          const childNumber = childCounter[id - 1]++ + 1;
+          const childDeleted = childDeletedCounter[id - 1]++ + 1;
+
+          if (childDeletedCounter[id - 1] == 1) {
+            $('#children-' + parentId).addClass('children');
+          }
+          const child = $('<div>')
+            .addClass('child')
+            .attr('id', 'child-' + parentId + '-' + childNumber);
+
+          const delBtn = $('<button>')
+            .addClass('btn btn-del')
+            .text('X')
+            .on('click', function () {
+              $('#child-' + parentId + '-' + childNumber).remove();
+              childDeletedCounter[parentId - 1]--;
+              if (childDeletedCounter[parentId - 1] < 1) {
+                $('#children-' + parentId).removeClass('children');
+              }
+            });
+
+          const buttons = $('<div>').append(delBtn).addClass('buttons');
+          const h3 = $('<h3>').text('Child ' + childNumber);
+
+          child.append(h3, buttons);
+          $('#children-' + parentId).append(child);
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Pętla for, dynamiczne tworzenie i usuwanie html-a, cz. 2</h1>
+    <section>
+      <button id="btn-gen">Utwórz</button>
+      <button id="btn-del">Usuń</button>
+      <select id="sel"></select>
+    </section>
+    <section id="board"></section>
+  </body>
+</html>

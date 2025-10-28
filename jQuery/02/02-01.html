@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>02-01</title>
+    <style>
+      body {
+        text-align: center;
+      }
+
+      #board {
+        background: lightgray;
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      div {
+        width: 50px;
+        height: 50px;
+        background: yellow;
+        margin: 10px;
+        line-height: 50px;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        for (let i = 0; i < 10; i++) {
+          $('#sel').append($('<option>').text(i + 1));
+        }
+
+        let counter = 0;
+
+        $('#btn-gen').on('click', function () {
+          const val = parseInt($('#sel').val());
+          const board = $('#board');
+          for (let i = 0; i < val; i++) {
+            counter++;
+            board.append($('<div>').text(counter));
+          }
+        });
+
+        $('#btn-del').on('click', function () {
+          $('#board').empty();
+          counter = 0;
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Pętla for, dynamiczne tworzenie i usuwanie html-a, cz. 1</h1>
+    <main>
+      <section>
+        <button id="btn-gen">Generuj</button>
+        <button id="btn-del">Usuń</button>
+        <select id="sel"></select>
+      </section>
+      <section id="board"></section>
+    </main>
+  </body>
+</html>
