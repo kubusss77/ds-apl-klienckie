@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>01-03a</title>
+    <style>
+      button {
+        display: block;
+        margin: auto;
+        margin-bottom: 20px;
+      }
+
+      div {
+        width: 100px;
+        height: 100px;
+        margin-inline: auto;
+        background: cyan;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#btn').on('click', function () {
+          const div = $('#div');
+          const width = parseInt(div.css('width'));
+          const height = parseInt(div.css('height'));
+
+          const conf = confirm('Klik?');
+          if (conf) {
+            div.css('width', width * 2 + 'px');
+            div.css('height', height * 2 + 'px');
+          } else {
+            div.css('width', width / 3 + 'px');
+            div.css('height', height / 3 + 'px');
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <button id="btn">Klik</button>
+    <div id="div"></div>
+  </body>
+</html>

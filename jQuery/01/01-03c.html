@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>01-03c</title>
+    <style>
+      body {
+        height: 500px;
+      }
+      div {
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        background: pink;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        let clicked = false;
+        $('#div').on('click', function () {
+          const div = $('#div');
+          const top = parseInt(div.css('top'));
+          const left = parseInt(div.css('left'));
+          console.log(top, left);
+
+          clicked = !clicked;
+          if (clicked) {
+            div.css('left', left + 50 + 'px');
+          } else {
+            div.css('top', top + 50 + 'px');
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="div"></div>
+  </body>
+</html>

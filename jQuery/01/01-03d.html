@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>01-03d</title>
+    <style>
+      #div {
+        height: 100px;
+        width: 100px;
+        background: greenyellow;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        let counter = 0;
+        let over = false;
+
+        const div = $('#div');
+        $('#div').on('mouseover', function () {
+          over = true;
+          while (over) {
+            counter++;
+            console.log(counter);
+            div.text(counter);
+            setTimeout(() => {}, 500);
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="div">0</div>
+  </body>
+</html>

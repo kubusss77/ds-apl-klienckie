@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>01-03b</title>
+    <style>
+      div {
+        height: 100px;
+        width: 100px;
+        margin-inline: auto;
+        background: yellow;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        let clicked = false;
+        $('#div').on('click', function () {
+          const div = $('#div');
+
+          clicked = !clicked;
+          if (clicked) {
+            div.css('float', 'right');
+          } else {
+            div.css('float', 'left');
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="div"></div>
+  </body>
+</html>
