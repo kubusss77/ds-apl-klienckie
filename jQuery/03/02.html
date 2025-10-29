@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>03-02</title>
+    <style>
+      body {
+        text-align: center;
+      }
+
+      #board {
+        width: 500px;
+        height: 500px;
+        background: lightgray;
+        margin-inline: auto;
+        margin-top: 50px;
+        padding: 20px;
+
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 20px;
+      }
+
+      .box {
+        background: gray;
+      }
+
+      .box-colored {
+        background: red;
+      }
+
+      .player {
+        border-radius: 100%;
+        z-index: 10;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        let checked = [];
+        let started = false;
+        let move = 0;
+
+        const board = $('#board');
+        const text = $('#text');
+        for (let i = 1; i < 6; i++) {
+          for (let j = 1; j < 6; j++) {
+            const box = $('<div>')
+              .addClass('box')
+              .css('grid-column', i)
+              .css('grid-row', j)
+              .attr('id', 'box-' + i + '-' + j)
+              .on('click', () => boxClick(i, j));
+            board.append(box);
+          }
+        }
+
+        function boxClick(x, y) {
+          if (started) {
+            text.text('Gra już jest wystartowana!');
+            return;
+          }
+
+          $('#box-' + x + '-' + y).addClass('box-colored');
+          checked.push({ x, y });
+
+          text.text('Długość: ' + checked.length);
+        }
+
+        $('#start').on('click', function () {
+          if (checked.length < 3) {
+            text.text('Za mały labirynt, musi mieć conajmniej 3');
+            return;
+          }
+          if (started) {
+            text.text('Gra już jest wystartowana!');
+            return;
+          }
+
+          started = true;
+
+          text.text('Gra rozpoczęta! Gracz 1 zaczyna');
+          const player1 = $('<div>')
+            .attr('id', 'player1')
+            .addClass('player')
+            .css('grid-column', checked[0].x)
+            .css('grid-row', checked[0].y)
+            .css('background', 'blue');
+          const player2 = $('<div>')
+            .attr('id', 'player2')
+            .addClass('player')
+            .css('grid-column', checked[checked.length - 1].x)
+            .css('grid-row', checked[checked.length - 1].y)
+            .css('background', 'green');
+          board.append(player1, player2);
+          console.table(checked);
+        });
+
+        $('#move').on('click', function () {
+          if (!started) {
+            text.text('Najpierw wystaruj grę');
+            return;
+          }
+
+          const index1 = move / 2 + 1;
+          const index2 = checked.length - (move + 1) / 2 - 1;
+          console.log(index1, index2);
+          if (index1 - index2 == 0.5) {
+            if (index1 % 2 == 1) {
+              text.text('koniec gry dla gracza 1');
+            } else {
+              text.text('koniec gry dla gracza 2');
+            }
+
+            return;
+          }
+
+          if (move % 2 == 0) {
+            $('#player1').css('grid-column', checked[index1].x).css('grid-row', checked[index1].y);
+            text.text('Teraz ruch gracza 2');
+          } else {
+            $('#player2').css('grid-column', checked[index2].x).css('grid-row', checked[index2].y);
+            text.text('Teraz ruch gracza 1');
+          }
+
+          move++;
+        });
+
+        $('#reset').on('click', function () {
+          checked = [];
+          started = false;
+          move = 0;
+
+          $('.box-colored').removeClass('box-colored');
+          $('#player1').remove();
+          $('#player2').remove();
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Labirynt</h1>
+    <section id="buttons">
+      <button id="start">Start</button>
+      <button id="move">Ruch</button>
+      <button id="reset">Reset</button>
+    </section>
+    <section id="board"></section>
+    <p id="text"></p>
+  </body>
+</html>
