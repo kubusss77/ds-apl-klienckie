@@ -56,9 +56,8 @@
         }
 
         function boxClicked(x, y) {
-          
-          $('#left-' + 4 - x + '-' + 4 - y).css('background', 'blue');
-          $('#right-' + 4 - x + '-' + 4 - y).css('background', 'red');
+          $('#left-' + x + '-' + y).css('background', 'blue');
+          $('#right-' + x + '-' + (4 - y)).css('background', 'red');
         }
       });
     </script>
