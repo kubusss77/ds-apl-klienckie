@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      td,
+      th {
+        border: 1px solid black;
+        padding-inline: 5px;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      const data = {
+        columns: ['produkt', 'cena/szt', 'liczba', 'wartość', 'rabat'],
+        products: [
+          { price: '2.22', product: 'kurtka' },
+          { price: '3.34', product: 'szalik' },
+          { price: '4.44', product: 'rękawiczki' },
+          { price: '5.55', product: 'buty' },
+          { price: '6.66', product: 'bluza' },
+          { price: '7.77', product: 'coś na wieczór' },
+        ],
+      };
+
+      $(document).ready(function () {
+        const table = $('table').css('margin-inline', 'auto');
+
+        let amounts = [];
+        for (let i = 0; i < data.products.length; i++) {
+          amounts.push(1);
+        }
+
+        let rabat = 0.1;
+
+        function tableRender() {
+          table.empty();
+          const captionSelect = $('<select>')
+            .attr('id', 'sel-rabat')
+            .on('change', () => rabatChanged());
+          for (let i = 0; i < 110; i += 10) {
+            captionSelect.append($('<option>').text(i + '%'));
+          }
+
+          const captionText = $('<p>').text('Wybierz rabat: ');
+          const caption = $('<caption>')
+            .append(captionText, captionSelect)
+            .attr('colspan', '5')
+            .css('display', 'flex')
+            .css('text-align', 'center');
+
+          table.append(caption);
+
+          const tableHeader = $('<tr>');
+          for (let i = 0; i < data.columns.length; i++) {
+            tableHeader.append($('<th>').text(data.columns[i]).css('background', '#444').css('color', 'white'));
+          }
+          table.append(tableHeader);
+
+          $('#sel-rabat').val(rabat * 100 + '%');
+
+          let sumAmount = 0;
+          let sumWartosc = 0;
+          let sumRabat = 0;
+          for (let i = 0; i < data.products.length; i++) {
+            const product = data.products[i];
+
+            const tdProduct = $('<td>').text(product.product).css('background', '#eee');
+
+            const tdPrice = $('<td>').text(product.price).css('text-align', 'right');
+
+            const select = $('<select>')
+              .attr('id', 'sel-amount-' + i)
+              .on('change', () => amountChanged(i));
+            for (let j = 1; j < 51; j++) {
+              select.append($('<option>').text(j));
+            }
+            const amount = amounts[i];
+            select.val(amount);
+            sumAmount += amount;
+
+            const tdSelect = $('<td>').append(select).css('text-align', 'right');
+
+            const wartosc = ((product.price - product.price * rabat) * amounts[i]).toFixed(2);
+            const tdWartosc = $('<td>').text(wartosc).css('text-align', 'right');
+            sumWartosc += parseFloat(wartosc);
+
+            const rabatSum = parseFloat((product.price * rabat * amounts[i]).toFixed(2));
+            const tdRabat = $('<td>').text(rabatSum).css('text-align', 'right');
+            sumRabat += rabatSum;
+
+            const tr = $('<tr>').append(tdProduct, tdPrice, tdSelect, tdWartosc, tdRabat);
+            table.append(tr);
+          }
+
+          const tdSumRazem = $('<td>')
+            .text('RAZEM')
+            .attr('colspan', '2')
+            .css('background', '#444')
+            .css('color', 'white')
+            .css('text-align', 'center');
+          const tdSumLiczba = $('<td>')
+            .text(sumAmount)
+            .css('background', '#48e')
+            .css('text-align', 'right')
+            .css('color', 'white');
+          const tdSumWartosc = $('<td>')
+            .text(sumWartosc.toFixed(2))
+            .css('background', '#48e')
+            .css('text-align', 'right')
+            .css('color', 'white');
+          const tdSumRabat = $('<td>')
+            .text(sumRabat.toFixed(2))
+            .css('background', '#48e')
+            .css('text-align', 'right')
+            .css('color', 'white');
+          const sum = $('<tr>').append(tdSumRazem, tdSumLiczba, tdSumWartosc, tdSumRabat);
+
+          table.append(sum);
+        }
+
+        function rabatChanged() {
+          rabat = parseInt($('#sel-rabat').val()) * 0.01;
+          tableRender();
+        }
+
+        function amountChanged(id) {
+          amounts[id] = parseFloat($('#sel-amount-' + id).val());
+          tableRender();
+        }
+
+        tableRender();
+      });
+    </script>
+  </head>
+  <body>
+    <table></table>
+  </body>
+</html>
