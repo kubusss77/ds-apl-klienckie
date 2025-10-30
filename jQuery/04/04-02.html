@@ -34,6 +34,15 @@
 
         line-height: 50px;
         text-align: center;
+        background: lightgray;
+      }
+
+      .even {
+        background: violet;
+      }
+
+      .odd {
+        background: orange;
       }
     </style>
     <script>
@@ -46,11 +55,39 @@
         const fields = [];
         for (let i = 0; i < 25; i++) {
           const random = Math.floor(Math.random() * 25);
-          const box = $('<div>').addClass('box').text(random).attr('data-index', i).attr('data-value', random);
+          const box = $('<div>')
+            .addClass('box')
+            .text(random)
+            .attr('id', 'box-' + i)
+            .attr('data-value', random);
           board.append(box);
 
           fields.push(random);
         }
+
+        $('#even').on('click', function () {
+          fields.forEach((number, index) => {
+            if (number % 2 == 0) {
+              $('#box-' + index).addClass('even');
+            }
+          });
+        });
+
+        $('#odd').on('click', function () {
+          fields.forEach((number, index) => {
+            if (number % 2 == 1) {
+              $('#box-' + index).addClass('odd');
+            }
+          });
+        });
+
+        $('#reset').on('click', function () {
+          for (let i = 0; i < 25; i++) {
+            $('#box-' + i)
+              .removeClass('even')
+              .removeClass('odd');
+          }
+        });
       });
     </script>
   </head>
@@ -59,7 +96,9 @@
       <h1>Parzyste i nieparzyste</h1>
       <div id="grid"></div>
       <section>
-        <button></button>
+        <button id="even">Parzyste</button>
+        <button id="odd">Nieparzyste</button>
+        <button id="reset">Reset</button>
       </section>
     </main>
   </body>

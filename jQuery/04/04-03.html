@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>04-03</title>
+    <style>
+      body {
+        text-align: center;
+      }
+
+      main {
+        display: flex;
+        justify-content: center;
+      }
+
+      section {
+        display: flex;
+        justify-self: center;
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 20px;
+        background: gray;
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .box {
+        background: lightgray;
+        height: 50px;
+        width: 50px;
+        line-height: 50px;
+      }
+    </style>
+    <script src="../jquery.js"></script>
+    <script>
+      $(document).ready(function () {
+        for (let i = 0; i < 5; i++) {
+          for (let j = 0; j < 5; j++) {
+            const boxLeft = $('<div>')
+              .addClass('box')
+              .text(`(${i}, ${j})`)
+              .attr('id', 'left-' + i + '-' + j)
+              .on('click', () => boxClicked(i, j));
+            const boxRight = $('<div>')
+              .addClass('box')
+              .text(`(${i}, ${j})`)
+              .attr('id', 'right-' + i + '-' + j);
+            $('#board1').append(boxLeft);
+            $('#board2').append(boxRight);
+          }
+        }
+
+        function boxClicked(x, y) {
+          
+          $('#left-' + 4 - x + '-' + 4 - y).css('background', 'blue');
+          $('#right-' + 4 - x + '-' + 4 - y).css('background', 'red');
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Lustro</h1>
+    <main>
+      <section>
+        <div class="board" id="board1"></div>
+        <div class="board" id="board2"></div>
+      </section>
+    </main>
+  </body>
+</html>
